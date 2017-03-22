@@ -102,10 +102,10 @@ public class GameScreen implements Screen {
             previousTouched = false;
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             camera.zoom -= 0.02f;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             camera.zoom += 0.02f;
         }
 
