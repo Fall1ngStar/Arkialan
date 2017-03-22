@@ -5,9 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+
+import javax.sound.sampled.Line;
 
 
 /**
@@ -18,9 +21,11 @@ import com.badlogic.gdx.math.Vector2;
 public class GameScreen implements Screen {
 
     public static ShapeRenderer sr = new ShapeRenderer();
+    public static ShapeRenderer debugSr = new ShapeRenderer();
 
     private SpriteBatch batch;
     private OrthographicCamera camera;
+    private BitmapFont font;
 
     private World world;
 
@@ -31,6 +36,7 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         batch = new SpriteBatch();
+        font = new BitmapFont();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
 
@@ -52,8 +58,27 @@ public class GameScreen implements Screen {
         sr.setProjectionMatrix(camera.combined);
         input();
 
-        world.  render();
+        world.render();
 
+        /*debugSr.begin(ShapeRenderer.ShapeType.Line);
+        debugSr.setColor(0, 0, 0, 1);
+        debugSr.line(Gdx.input.getX(), -5000, Gdx.input.getX(), 5000);
+        debugSr.line(-5000, (Main.SCREEN_HEIGHT - Gdx.input.getY()), 5000, (Main.SCREEN_HEIGHT - Gdx.input.getY()));
+        debugSr.end();
+
+        sr.begin(ShapeRenderer.ShapeType.Line);
+        sr.setColor(0, 0, 0, 1);
+        sr.line(Gdx.input.getX() * camera.zoom + offsetX  + (1-camera.zoom) * Main.SCREEN_WIDTH/2, -5000, Gdx.input.getX() * camera.zoom + offsetX + (1-camera.zoom) * Main.SCREEN_WIDTH/2, 5000);
+        sr.line(-5000, (Main.SCREEN_HEIGHT - Gdx.input.getY()) * camera.zoom + offsetY, 5000, (Main.SCREEN_HEIGHT - Gdx.input.getY()) * camera.zoom + offsetY);
+        sr.end();
+
+        batch.begin();
+        font.setColor(0,0,0,1);
+        font.draw(batch,"Camera zoom : " + camera.zoom, 100,200);
+        font.draw(batch,"OffsetX : " + (1-camera.zoom) * Main.SCREEN_WIDTH, 100,175);
+        font.draw(batch,"Input X : " + Gdx.input.getX() * camera.zoom + offsetX, 100,150);
+        font.draw(batch,"Input Y : " + (Main.SCREEN_HEIGHT - Gdx.input.getY()) * camera.zoom + offsetY, 100,100);*/
+        batch.end();
     }
 
     @Override
@@ -84,7 +109,8 @@ public class GameScreen implements Screen {
 
     public void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            world.addBuilding(new Plateform(new Vector2(Gdx.input.getX() + offsetX, (Main.SCREEN_HEIGHT - Gdx.input.getY()) + offsetY)));
+            world.addBuilding(new Plateform(new Vector2(Gdx.input.getX() * camera.zoom + offsetX + (1-camera.zoom) * Main.SCREEN_WIDTH/2
+                    , (Main.SCREEN_HEIGHT - Gdx.input.getY()) * camera.zoom + offsetY + (1-camera.zoom) * Main.SCREEN_HEIGHT/2)));
         }
         if (Gdx.input.isTouched()) {
             if (previousTouched) {
@@ -110,7 +136,7 @@ public class GameScreen implements Screen {
         }
 
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             world.clear();
         }
     }
