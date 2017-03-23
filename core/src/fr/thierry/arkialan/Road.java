@@ -25,4 +25,15 @@ public class Road {
         sr.rectLine(one.pos.x, one.pos.y, two.pos.x, two.pos.y,5);
         sr.end();
     }
+
+    public boolean equals(Object o){
+        if(!(o instanceof Road)){
+            return false;
+        }
+        if(o == null){
+            return false;
+        }
+        Road other = (Road)o;
+        return other.one == this.one && other.two == this.two;
+    }
 }

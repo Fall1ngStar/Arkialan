@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Plateform extends Building {
 
     private float radius;
+    private boolean isSelected;
 
     public Plateform(Vector2 pos){
         this.pos = pos;
@@ -21,9 +22,21 @@ public class Plateform extends Building {
     public void render() {
         sr.begin(ShapeRenderer.ShapeType.Filled);
         sr.setColor(0,0,0,1);
-        sr.circle(pos.x, pos.y, radius+3);
+        sr.circle(pos.x, pos.y, radius+3 + (isSelected ? 4 : 0));
         sr.setColor(1,1,0,1);
-        sr.circle(pos.x, pos.y, radius);
+        sr.circle(pos.x, pos.y, radius + (isSelected ? 4 : 0));
         sr.end();
+    }
+
+    public void setSelected(boolean selected){
+        isSelected = selected;
+    }
+
+    public Vector2 getPos(){
+        return pos;
+    }
+
+    public float getRadius(){
+        return radius;
     }
 }

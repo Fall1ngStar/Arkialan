@@ -52,7 +52,7 @@ public class MyInput implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        if(amount == -1){
+        if(amount == -1 && camera.zoom > 0.07f){
             camera.zoom -= 0.06f;
         }
         if(amount == 1){

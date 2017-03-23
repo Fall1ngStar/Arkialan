@@ -120,7 +120,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             world.addBuilding(new Plateform(new Vector2(getRelativeX(), getRelativeY())));
         }
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (previousTouched) {
                 camera.translate(-(Gdx.input.getX() - previousX) * camera.zoom, -(Main.SCREEN_HEIGHT - Gdx.input.getY() - previousY) * camera.zoom);
                 offsetX -= (Gdx.input.getX() - previousX) * camera.zoom;
@@ -136,13 +136,12 @@ public class GameScreen implements Screen {
             previousTouched = false;
         }
 
-        /*if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            camera.zoom -= 0.007f;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.zoom += 0.007f;
+        /*if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
+            world.select(getRelativeX(), getRelativeY());
         }*/
-
+        if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
+            world.select(getRelativeX(), getRelativeY());
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             world.clear();
