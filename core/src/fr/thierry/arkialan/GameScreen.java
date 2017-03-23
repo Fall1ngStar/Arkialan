@@ -67,6 +67,8 @@ public class GameScreen implements Screen {
         font.setColor(0,0,0,1);
         font.draw(batch,"FPS : " + Math.round(((1/delta)+previousFps)/2),30, Main.SCREEN_HEIGHT-30);
         previousFps = 1/delta;
+        font.draw(batch, "Roads : " + world.getRoadsNumber(),30, Main.SCREEN_HEIGHT-60);
+        font.draw(batch, "Buildings : " + world.getBuildingsNumber(),30, Main.SCREEN_HEIGHT-90);
         batch.end();
 
         /*debugSr.begin(ShapeRenderer.ShapeType.Line);

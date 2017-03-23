@@ -1,8 +1,12 @@
 package fr.thierry.arkialan;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.pfa.Connection;
+import com.badlogic.gdx.ai.pfa.Graph;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +16,7 @@ import java.util.List;
  * Created by Thierry
  * 21/03/2017
  */
-public class World {
+public class World implements Graph<Building>, IndexedGraph<Building>{
 
     private List<Building> buildings;
     private List<Road> roads;
@@ -69,10 +73,40 @@ public class World {
         if(selectedOne != null && selectedTwo!= null){
             if(selectedOne != selectedTwo && !roads.contains(new Road(selectedOne, selectedTwo))){
                 roads.add(new Road(selectedOne, selectedTwo));
+                roads.add(new Road(selectedTwo, selectedOne));
             }
             selectedOne.setSelected(false);
             selectedOne = null;
             selectedTwo = null;
         }
+    }
+
+    public int getRoadsNumber(){
+        return roads.size();
+    }
+
+    public int getBuildingsNumber(){
+        return  buildings.size();
+    }
+
+    @Override
+    public Array<Connection<Building>> getConnections(Building fromNode) {
+        Array<Connection<Building>> array = new Array<>();
+        roads.forEach((e)->{
+            if(e.getFromNode() == fromNode){
+                array.add(e);
+            }
+        });
+        return array;
+    }
+
+    @Override
+    public int getIndex(Building node) {
+        return buildings.indexOf(node);
+    }
+
+    @Override
+    public int getNodeCount() {
+        return buildings.size();
     }
 }

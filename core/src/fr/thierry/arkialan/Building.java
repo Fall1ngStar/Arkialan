@@ -14,4 +14,8 @@ public abstract class Building {
     protected Vector2 pos;
 
     public abstract void render();
+
+    public Vector2 getPos(){
+        return pos;
+    }
 }
