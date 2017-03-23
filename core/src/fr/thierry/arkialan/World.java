@@ -109,4 +109,8 @@ public class World implements Graph<Building>, IndexedGraph<Building>{
     public int getNodeCount() {
         return buildings.size();
     }
+
+    public Building getNode(int index){
+        return buildings.get(index);
+    }
 }

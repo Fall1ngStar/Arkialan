@@ -3,12 +3,16 @@ package fr.thierry.arkialan;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.pfa.Connection;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.Iterator;
 
 
 /**
@@ -26,6 +30,8 @@ public class GameScreen implements Screen {
     private BitmapFont font;
 
     private World world;
+    private IndexedAStarPathFinder<Building> finder;
+    private PlateformRoadPath path;
 
     private float previousFps;
     private float previousX, previousY;
@@ -45,6 +51,9 @@ public class GameScreen implements Screen {
 
         world = new World();
         previousTouched = false;
+
+
+        path = new PlateformRoadPath();
     }
 
     @Override
@@ -90,6 +99,15 @@ public class GameScreen implements Screen {
         font.draw(batch,"MyInput X : " + Gdx.input.getX() * camera.zoom + offsetX, 100,150);
         font.draw(batch,"MyInput Y : " + (Main.SCREEN_HEIGHT - Gdx.input.getY()) * camera.zoom + offsetY, 100,100);
         batch.end();*/
+
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.setColor(1,0,0,1);
+        Iterator<Connection<Building>> iterator = path.iterator();
+        while(iterator.hasNext()){
+            Road r = ((Road)iterator.next());
+            sr.rectLine(r.getFromNode().pos.x, r.getFromNode().pos.y, r.getToNode().pos.x, r.getToNode().pos.y, 10);
+        }
+        sr.end();
     }
 
     @Override
@@ -148,6 +166,16 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             world.clear();
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.O)){
+            path.clear();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            finder = new IndexedAStarPathFinder<Building>(world);
+            finder.searchConnectionPath(world.getNode(0), world.getNode(world.getNodeCount()-1), new SimpleHeuristic(), path);
+        }
+
     }
 
     private float getRelativeX(){
