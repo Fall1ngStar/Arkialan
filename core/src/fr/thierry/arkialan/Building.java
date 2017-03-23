@@ -15,7 +15,7 @@ public abstract class Building {
 
     public abstract void render();
 
-    public Vector2 getPos(){
+    public Vector2 getPos() {
         return pos;
     }
 }

@@ -9,7 +9,7 @@ public class SimplePathFinder implements PathFinder<Building> {
 
     private World world;
 
-    public SimplePathFinder(World world){
+    public SimplePathFinder(World world) {
         this.world = world;
     }
 

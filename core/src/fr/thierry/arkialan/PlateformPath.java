@@ -9,11 +9,11 @@ import java.util.List;
 /**
  * Created by Thierry on 23/03/2017.
  */
-public class PlateformPath implements GraphPath<Building>{
+public class PlateformPath implements GraphPath<Building> {
 
     private List<Building> path;
 
-    public PlateformPath(){
+    public PlateformPath() {
         path = new ArrayList<>();
     }
 

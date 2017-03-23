@@ -14,7 +14,7 @@ public class PlateformRoadPath implements GraphPath<Connection<Building>> {
 
     private List<Connection<Building>> path;
 
-    public PlateformRoadPath(){
+    public PlateformRoadPath() {
         path = new ArrayList<>();
     }
 

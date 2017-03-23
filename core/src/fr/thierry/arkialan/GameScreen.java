@@ -39,7 +39,6 @@ public class GameScreen implements Screen {
     private boolean previousTouched;
 
 
-
     public GameScreen() {
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -73,11 +72,11 @@ public class GameScreen implements Screen {
         world.render();
 
         batch.begin();
-        font.setColor(0,0,0,1);
-        font.draw(batch,"FPS : " + Math.round(((1/delta)+previousFps)/2),30, Main.SCREEN_HEIGHT-30);
-        previousFps = 1/delta;
-        font.draw(batch, "Roads : " + world.getRoadsNumber(),30, Main.SCREEN_HEIGHT-60);
-        font.draw(batch, "Buildings : " + world.getBuildingsNumber(),30, Main.SCREEN_HEIGHT-90);
+        font.setColor(0, 0, 0, 1);
+        font.draw(batch, "FPS : " + Math.round(((1 / delta) + previousFps) / 2), 30, Main.SCREEN_HEIGHT - 30);
+        previousFps = 1 / delta;
+        font.draw(batch, "Roads : " + world.getRoadsNumber(), 30, Main.SCREEN_HEIGHT - 60);
+        font.draw(batch, "Buildings : " + world.getBuildingsNumber(), 30, Main.SCREEN_HEIGHT - 90);
         batch.end();
 
         /*debugSr.begin(ShapeRenderer.ShapeType.Line);
@@ -101,10 +100,10 @@ public class GameScreen implements Screen {
         batch.end();*/
 
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.setColor(1,0,0,1);
+        sr.setColor(1, 0, 0, 1);
         Iterator<Connection<Building>> iterator = path.iterator();
-        while(iterator.hasNext()){
-            Road r = ((Road)iterator.next());
+        while (iterator.hasNext()) {
+            Road r = ((Road) iterator.next());
             sr.rectLine(r.getFromNode().pos.x, r.getFromNode().pos.y, r.getToNode().pos.x, r.getToNode().pos.y, 10);
         }
         sr.end();
@@ -159,7 +158,7 @@ public class GameScreen implements Screen {
         /*if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
             world.select(getRelativeX(), getRelativeY());
         }*/
-        if(Gdx.input.isKeyJustPressed(Input.Keys.E)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             world.select(getRelativeX(), getRelativeY());
         }
 
@@ -167,22 +166,22 @@ public class GameScreen implements Screen {
             world.clear();
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.O)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
             path.clear();
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             finder = new IndexedAStarPathFinder<Building>(world);
-            finder.searchConnectionPath(world.getNode(0), world.getNode(world.getNodeCount()-1), new SimpleHeuristic(), path);
+            finder.searchConnectionPath(world.getNode(0), world.getNode(world.getNodeCount() - 1), new SimpleHeuristic(), path);
         }
 
     }
 
-    private float getRelativeX(){
-        return Gdx.input.getX() * camera.zoom + offsetX + (1-camera.zoom) * Main.SCREEN_WIDTH/2;
+    private float getRelativeX() {
+        return Gdx.input.getX() * camera.zoom + offsetX + (1 - camera.zoom) * Main.SCREEN_WIDTH / 2;
     }
 
-    private float getRelativeY(){
-        return (Main.SCREEN_HEIGHT - Gdx.input.getY()) * camera.zoom + offsetY + (1-camera.zoom) * Main.SCREEN_HEIGHT/2;
+    private float getRelativeY() {
+        return (Main.SCREEN_HEIGHT - Gdx.input.getY()) * camera.zoom + offsetY + (1 - camera.zoom) * Main.SCREEN_HEIGHT / 2;
     }
 }

@@ -11,11 +11,11 @@ public class Unit {
     private static ShapeRenderer sr = GameScreen.sr;
     private Vector2 pos;
 
-    public Unit(){
+    public Unit() {
 
     }
 
-    public void render(){
+    public void render() {
 
     }
 }

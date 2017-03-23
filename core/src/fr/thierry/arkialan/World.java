@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Thierry
  * 21/03/2017
  */
-public class World implements Graph<Building>, IndexedGraph<Building>{
+public class World implements Graph<Building>, IndexedGraph<Building> {
 
     private List<Building> buildings;
     private List<Road> roads;
@@ -43,35 +43,35 @@ public class World implements Graph<Building>, IndexedGraph<Building>{
         buildings.add(b);
     }
 
-    public void clear(){
+    public void clear() {
         roads.clear();
         buildings.clear();
         selectedTwo = null;
         selectedOne = null;
     }
 
-    public void select(float x, float y){
-        if(selectedOne == null){
+    public void select(float x, float y) {
+        if (selectedOne == null) {
             int i = -1;
-            while(++i < buildings.size() && selectedOne == null){
+            while (++i < buildings.size() && selectedOne == null) {
                 Plateform p = (Plateform) buildings.get(i);
-                if(Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()){
+                if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
                     selectedOne = p;
                     selectedOne.setSelected(true);
                 }
             }
         } else {
             int i = -1;
-            while(++i < buildings.size() && selectedTwo == null){
+            while (++i < buildings.size() && selectedTwo == null) {
                 Plateform p = (Plateform) buildings.get(i);
-                if(Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()){
+                if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
                     selectedTwo = p;
                 }
             }
         }
 
-        if(selectedOne != null && selectedTwo!= null){
-            if(selectedOne != selectedTwo && !roads.contains(new Road(selectedOne, selectedTwo))){
+        if (selectedOne != null && selectedTwo != null) {
+            if (selectedOne != selectedTwo && !roads.contains(new Road(selectedOne, selectedTwo))) {
                 roads.add(new Road(selectedOne, selectedTwo));
                 roads.add(new Road(selectedTwo, selectedOne));
             }
@@ -81,19 +81,19 @@ public class World implements Graph<Building>, IndexedGraph<Building>{
         }
     }
 
-    public int getRoadsNumber(){
+    public int getRoadsNumber() {
         return roads.size();
     }
 
-    public int getBuildingsNumber(){
-        return  buildings.size();
+    public int getBuildingsNumber() {
+        return buildings.size();
     }
 
     @Override
     public Array<Connection<Building>> getConnections(Building fromNode) {
         Array<Connection<Building>> array = new Array<>();
-        roads.forEach((e)->{
-            if(e.getFromNode() == fromNode){
+        roads.forEach((e) -> {
+            if (e.getFromNode() == fromNode) {
                 array.add(e);
             }
         });
@@ -110,7 +110,7 @@ public class World implements Graph<Building>, IndexedGraph<Building>{
         return buildings.size();
     }
 
-    public Building getNode(int index){
+    public Building getNode(int index) {
         return buildings.get(index);
     }
 }
