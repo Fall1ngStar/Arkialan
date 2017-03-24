@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Thierry on 23/03/2017.
  */
-public class PlateformRoadPath implements GraphPath<Connection<Building>> {
+public class PlateformRoadPath implements GraphPath<Connection<Building>>, Cloneable {
 
     private List<Connection<Building>> path;
 
@@ -46,5 +46,11 @@ public class PlateformRoadPath implements GraphPath<Connection<Building>> {
     @Override
     public Iterator<Connection<Building>> iterator() {
         return path.iterator();
+    }
+
+    public PlateformRoadPath clone(){
+        PlateformRoadPath clone = new PlateformRoadPath();
+        clone.path = new ArrayList<>(path);
+        return clone;
     }
 }

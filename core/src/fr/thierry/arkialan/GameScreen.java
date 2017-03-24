@@ -12,7 +12,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -39,6 +41,7 @@ public class GameScreen implements Screen {
     private boolean previousTouched;
 
     private Plateform pathFrom, pathTo;
+    private List<Unit> units;
 
 
     public GameScreen() {
@@ -55,6 +58,7 @@ public class GameScreen implements Screen {
 
 
         path = new PlateformRoadPath();
+        units = new ArrayList<>();
     }
 
     @Override
@@ -77,7 +81,7 @@ public class GameScreen implements Screen {
         font.setColor(0, 0, 0, 1);
         font.draw(batch, "FPS : " + Math.round(((1 / delta) + previousFps) / 2), 30, Main.SCREEN_HEIGHT - 30);
         previousFps = 1 / delta;
-        font.draw(batch, "Roads : " + world.getRoadsNumber(), 30, Main.SCREEN_HEIGHT - 60);
+        font.draw(batch, "Roads : " + world.getRoadsNumber()/2, 30, Main.SCREEN_HEIGHT - 60);
         font.draw(batch, "Buildings : " + world.getBuildingsNumber(), 30, Main.SCREEN_HEIGHT - 90);
         batch.end();
 
@@ -109,6 +113,7 @@ public class GameScreen implements Screen {
             sr.rectLine(r.getFromNode().pos.x, r.getFromNode().pos.y, r.getToNode().pos.x, r.getToNode().pos.y, 10);
         }
         sr.end();
+        units.forEach(Unit::render);
     }
 
     @Override
@@ -165,6 +170,7 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            units.clear();
             path.clear();
             world.clear();
         }
@@ -174,16 +180,19 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) && world.getBuildingsNumber() > 0) {
-            if(pathFrom == null){
-                pathFrom = world.selectForPath(getRelativeX(), getRelativeY());
-            } else{
+            if(pathTo == null){
                 pathTo = world.selectForPath(getRelativeX(), getRelativeY());
+            } else{
+                pathFrom = world.selectForPath(getRelativeX(), getRelativeY());
             }
 
             if(pathFrom != null && pathTo != null) {
                 path.clear();
                 finder = new IndexedAStarPathFinder<Building>(world);
                 finder.searchConnectionPath(pathFrom, pathTo, new SimpleHeuristic(), path);
+                if (path.getCount() > 0) {
+                    units.add(new Unit(path.clone()));
+                }
                 pathFrom = null;
                 pathTo = null;
             }
