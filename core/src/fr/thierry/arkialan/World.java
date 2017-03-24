@@ -1,10 +1,8 @@
 package fr.thierry.arkialan;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.Graph;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -21,8 +19,8 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
     private List<Building> buildings;
     private List<Road> roads;
 
-    private Plateform selectedOne;
-    private Plateform selectedTwo;
+    private Plateform roadOne;
+    private Plateform roadTwo;
 
     public World() {
         buildings = new ArrayList<>();
@@ -46,39 +44,49 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
     public void clear() {
         roads.clear();
         buildings.clear();
-        selectedTwo = null;
-        selectedOne = null;
+        roadTwo = null;
+        roadOne = null;
     }
 
-    public void select(float x, float y) {
-        if (selectedOne == null) {
+    public void selectForRoad(float x, float y) {
+        if (roadOne == null) {
             int i = -1;
-            while (++i < buildings.size() && selectedOne == null) {
+            while (++i < buildings.size() && roadOne == null) {
                 Plateform p = (Plateform) buildings.get(i);
                 if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
-                    selectedOne = p;
-                    selectedOne.setSelected(true);
+                    roadOne = p;
+                    roadOne.setSelected(true);
                 }
             }
         } else {
             int i = -1;
-            while (++i < buildings.size() && selectedTwo == null) {
+            while (++i < buildings.size() && roadTwo == null) {
                 Plateform p = (Plateform) buildings.get(i);
                 if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
-                    selectedTwo = p;
+                    roadTwo = p;
                 }
             }
         }
 
-        if (selectedOne != null && selectedTwo != null) {
-            if (selectedOne != selectedTwo && !roads.contains(new Road(selectedOne, selectedTwo))) {
-                roads.add(new Road(selectedOne, selectedTwo));
-                roads.add(new Road(selectedTwo, selectedOne));
+        if (roadOne != null && roadTwo != null) {
+            if (roadOne != roadTwo && !roads.contains(new Road(roadOne, roadTwo))) {
+                roads.add(new Road(roadOne, roadTwo));
+                roads.add(new Road(roadTwo, roadOne));
             }
-            selectedOne.setSelected(false);
-            selectedOne = null;
-            selectedTwo = null;
+            roadOne.setSelected(false);
+            roadOne = null;
+            roadTwo = null;
         }
+    }
+
+    public Plateform selectForPath(float x, float y) {
+        for(Building b : buildings){
+            Plateform p = (Plateform) b;
+            if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
+                return p;
+            }
+        }
+        return null;
     }
 
     public int getRoadsNumber() {

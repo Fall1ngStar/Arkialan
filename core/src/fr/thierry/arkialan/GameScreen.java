@@ -38,6 +38,8 @@ public class GameScreen implements Screen {
     private float offsetX, offsetY;
     private boolean previousTouched;
 
+    private Plateform pathFrom, pathTo;
+
 
     public GameScreen() {
         batch = new SpriteBatch();
@@ -156,13 +158,14 @@ public class GameScreen implements Screen {
         }
 
         /*if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
-            world.select(getRelativeX(), getRelativeY());
+            world.selectForRoad(getRelativeX(), getRelativeY());
         }*/
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            world.select(getRelativeX(), getRelativeY());
+            world.selectForRoad(getRelativeX(), getRelativeY());
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            path.clear();
             world.clear();
         }
 
@@ -170,9 +173,20 @@ public class GameScreen implements Screen {
             path.clear();
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            finder = new IndexedAStarPathFinder<Building>(world);
-            finder.searchConnectionPath(world.getNode(0), world.getNode(world.getNodeCount() - 1), new SimpleHeuristic(), path);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P) && world.getBuildingsNumber() > 0) {
+            if(pathFrom == null){
+                pathFrom = world.selectForPath(getRelativeX(), getRelativeY());
+            } else{
+                pathTo = world.selectForPath(getRelativeX(), getRelativeY());
+            }
+
+            if(pathFrom != null && pathTo != null) {
+                path.clear();
+                finder = new IndexedAStarPathFinder<Building>(world);
+                finder.searchConnectionPath(pathFrom, pathTo, new SimpleHeuristic(), path);
+                pathFrom = null;
+                pathTo = null;
+            }
         }
 
     }
