@@ -72,6 +72,8 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
             if (roadOne != roadTwo && !roads.contains(new Road(roadOne, roadTwo))) {
                 roads.add(new Road(roadOne, roadTwo));
                 roads.add(new Road(roadTwo, roadOne));
+            } else if(roads.contains(new Road(roadOne, roadTwo))){
+                roads.removeIf((e)-> e.equals(new Road(roadOne, roadTwo)));
             }
             roadOne.setSelected(false);
             roadOne = null;

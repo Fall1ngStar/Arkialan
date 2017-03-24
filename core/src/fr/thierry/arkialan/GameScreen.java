@@ -188,7 +188,7 @@ public class GameScreen implements Screen {
 
             if(pathFrom != null && pathTo != null) {
                 path.clear();
-                finder = new IndexedAStarPathFinder<Building>(world);
+                finder = new IndexedAStarPathFinder<>(world);
                 finder.searchConnectionPath(pathFrom, pathTo, new SimpleHeuristic(), path);
                 if (path.getCount() > 0) {
                     units.add(new Unit(path.clone()));
