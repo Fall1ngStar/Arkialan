@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Plateform extends Building {
 
-    private float radius;
     private boolean isSelected;
 
     public Plateform(Vector2 pos) {
@@ -32,7 +31,5 @@ public class Plateform extends Building {
         isSelected = selected;
     }
 
-    public float getRadius() {
-        return radius;
-    }
+
 }

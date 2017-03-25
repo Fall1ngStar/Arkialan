@@ -1,7 +1,6 @@
 package fr.thierry.arkialan;
 
 import com.badlogic.gdx.ai.pfa.Connection;
-import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,6 +14,8 @@ import java.util.List;
 public class Unit {
 
     private static ShapeRenderer sr = GameScreen.sr;
+    private static PathProvider provider;
+
     private Vector2 pos;
     private float speed;
 
@@ -22,15 +23,10 @@ public class Unit {
     private List<Vector2> vectorPath;
     private Iterator<Vector2> iteratorPath;
     private Vector2 nextDestination;
+    private Building lastDestination;
 
     public Unit(PlateformRoadPath path){
-        this.path = path;
-        vectorPath = new ArrayList<>();
-        generateVectorPath();
-        speed = 4f;
-        iteratorPath = vectorPath.iterator();
-        nextDestination = iteratorPath.next();
-        this.pos = nextDestination.cpy();
+        initialisePath(path);
     }
 
     private void generateVectorPath(){
@@ -41,6 +37,7 @@ public class Unit {
             vectorPath.add(r.getToNode().getPos());
         }
         vectorPath.add(r.getFromNode().getPos());
+        lastDestination =  r.getFromNode();
     }
 
 
@@ -50,13 +47,21 @@ public class Unit {
         }
         if(nextDestination != null){
             moveToward(nextDestination);
+        } else {
+            initialisePath(provider.getRandomPath(lastDestination));
         }
+
+
     }
 
     public void render() {
         update();
         sr.begin(ShapeRenderer.ShapeType.Filled);
         sr.setColor(0,1,0,1);
+        sr.circle(pos.x, pos.y, 10);
+        sr.end();
+        sr.begin(ShapeRenderer.ShapeType.Line);
+        sr.setColor(0,0,0,1);
         sr.circle(pos.x, pos.y, 10);
         sr.end();
     }
@@ -72,5 +77,20 @@ public class Unit {
             return Vector2.dst(pos.x, pos.y, targetDestination.x, targetDestination.y) < speed;
         }
         return false;
+    }
+
+
+    private void initialisePath(PlateformRoadPath path){
+        this.path = path;
+        vectorPath = new ArrayList<>();
+        generateVectorPath();
+        speed = 4f;
+        iteratorPath = vectorPath.iterator();
+        nextDestination = iteratorPath.next();
+        this.pos = nextDestination.cpy();
+    }
+
+    public static void setPathProvider(PathProvider p){
+        provider = p;
     }
 }

@@ -34,6 +34,7 @@ public class GameScreen implements Screen {
     private World world;
     private IndexedAStarPathFinder<Building> finder;
     private PlateformRoadPath path;
+    private PathProvider provider;
 
     private float previousFps;
     private float previousX, previousY;
@@ -59,6 +60,8 @@ public class GameScreen implements Screen {
 
         path = new PlateformRoadPath();
         units = new ArrayList<>();
+        provider = new PathProvider(world);
+        Unit.setPathProvider(provider);
     }
 
     @Override
@@ -166,6 +169,7 @@ public class GameScreen implements Screen {
             world.selectForRoad(getRelativeX(), getRelativeY());
         }*/
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            path.clear();
             world.selectForRoad(getRelativeX(), getRelativeY());
         }
 

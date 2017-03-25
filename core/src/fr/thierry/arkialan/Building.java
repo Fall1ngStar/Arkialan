@@ -12,10 +12,15 @@ public abstract class Building {
 
     protected ShapeRenderer sr = GameScreen.sr;
     protected Vector2 pos;
+    protected float radius;
 
     public abstract void render();
 
     public Vector2 getPos() {
         return pos.cpy();
+    }
+
+    public float getRadius() {
+        return radius;
     }
 }
