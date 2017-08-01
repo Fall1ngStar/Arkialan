@@ -14,7 +14,7 @@ public abstract class Building {
     protected Vector2 pos;
     protected float radius;
 
-    public abstract void render();
+    public abstract void render(float delta);
 
     public Vector2 getPos() {
         return pos.cpy();

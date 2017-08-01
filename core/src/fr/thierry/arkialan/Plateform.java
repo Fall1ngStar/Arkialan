@@ -8,28 +8,20 @@ import com.badlogic.gdx.math.Vector2;
  * Created by Thierry
  * 21/03/2017
  */
-public class Plateform extends Building {
-
-    private boolean isSelected;
+public class Plateform extends SelectableBuilding{
 
     public Plateform(Vector2 pos) {
         this.pos = pos;
-        radius = 50f;
+        radius = 40f;
     }
 
     @Override
-    public void render() {
+    public void render(float delta) {
         sr.begin(ShapeRenderer.ShapeType.Filled);
         sr.setColor(0, 0, 0, 1);
-        sr.circle(pos.x, pos.y, radius + 3 + (isSelected ? 4 : 0));
+        sr.circle(pos.x, pos.y, radius + 3 + (selected ? 4 : 0));
         sr.setColor(1, 1, 0, 1);
-        sr.circle(pos.x, pos.y, radius + (isSelected ? 4 : 0));
+        sr.circle(pos.x, pos.y, radius + (selected ? 4 : 0));
         sr.end();
     }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
-
 }

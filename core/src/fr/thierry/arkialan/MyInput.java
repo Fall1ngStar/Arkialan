@@ -2,7 +2,6 @@ package fr.thierry.arkialan;
 
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import javafx.scene.Camera;
 
 /**
  * Created by Thierry on 23/03/2017.

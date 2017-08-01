@@ -25,62 +25,59 @@ public class Unit {
     private Vector2 nextDestination;
     private Building lastDestination;
 
-    public Unit(PlateformRoadPath path){
+    public Unit(PlateformRoadPath path) {
         initialisePath(path);
     }
 
-    private void generateVectorPath(){
+    private void generateVectorPath() {
         Iterator<Connection<Building>> iterator = path.iterator();
         Road r = null;
-        while(iterator.hasNext()){
-            r = (Road)(iterator.next());
+        while (iterator.hasNext()) {
+            r = (Road) (iterator.next());
             vectorPath.add(r.getToNode().getPos());
         }
         vectorPath.add(r.getFromNode().getPos());
-        lastDestination =  r.getFromNode();
+        lastDestination = r.getFromNode();
     }
 
-
-    public void update(){
-        if(isNear(nextDestination)){
+    public void update() {
+        if (isNear(nextDestination)) {
             nextDestination = iteratorPath.hasNext() ? iteratorPath.next() : null;
         }
-        if(nextDestination != null){
+        if (nextDestination != null) {
             moveToward(nextDestination);
         } else {
             initialisePath(provider.getRandomPath(lastDestination));
         }
-
 
     }
 
     public void render() {
         update();
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.setColor(0,1,0,1);
+        sr.setColor(0, 1, 0, 1);
         sr.circle(pos.x, pos.y, 10);
         sr.end();
         sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.setColor(0,0,0,1);
+        sr.setColor(0, 0, 0, 1);
         sr.circle(pos.x, pos.y, 10);
         sr.end();
     }
 
-    public void moveToward(Vector2 destination){
+    public void moveToward(Vector2 destination) {
         if (destination != null) {
             pos.add(destination.cpy().sub(pos.cpy()).nor().scl(speed));
         }
     }
 
-    private boolean isNear(Vector2 targetDestination){
-        if(targetDestination != null){
+    private boolean isNear(Vector2 targetDestination) {
+        if (targetDestination != null) {
             return Vector2.dst(pos.x, pos.y, targetDestination.x, targetDestination.y) < speed;
         }
         return false;
     }
 
-
-    private void initialisePath(PlateformRoadPath path){
+    private void initialisePath(PlateformRoadPath path) {
         this.path = path;
         vectorPath = new ArrayList<>();
         generateVectorPath();
@@ -90,7 +87,7 @@ public class Unit {
         this.pos = nextDestination.cpy();
     }
 
-    public static void setPathProvider(PathProvider p){
+    public static void setPathProvider(PathProvider p) {
         provider = p;
     }
 }

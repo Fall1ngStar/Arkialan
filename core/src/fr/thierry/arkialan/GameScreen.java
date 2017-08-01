@@ -41,7 +41,7 @@ public class GameScreen implements Screen {
     private float offsetX, offsetY;
     private boolean previousTouched;
 
-    private Plateform pathFrom, pathTo;
+    private SelectableBuilding pathFrom, pathTo;
     private List<Unit> units;
 
 
@@ -53,7 +53,7 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(new MyInput(camera));
 
         camera.setToOrtho(false, Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
-
+        
         world = new World();
         previousTouched = false;
 
@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
         sr.setProjectionMatrix(camera.combined);
         input();
 
-        world.render();
+        world.render(delta);
 
         batch.begin();
         font.setColor(0, 0, 0, 1);
@@ -149,6 +149,11 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             world.addBuilding(new Plateform(new Vector2(getRelativeX(), getRelativeY())));
         }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
+            world.addBuilding(new Mine(new Vector2(getRelativeX(), getRelativeY())));
+        }
+
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (previousTouched) {
                 camera.translate(-(Gdx.input.getX() - previousX) * camera.zoom, -(Main.SCREEN_HEIGHT - Gdx.input.getY() - previousY) * camera.zoom);

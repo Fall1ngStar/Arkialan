@@ -3,6 +3,7 @@ package fr.thierry.arkialan;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.Graph;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -19,17 +20,17 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
     private List<Building> buildings;
     private List<Road> roads;
 
-    private Plateform roadOne;
-    private Plateform roadTwo;
+    private SelectableBuilding roadOne;
+    private SelectableBuilding roadTwo;
 
     public World() {
         buildings = new ArrayList<>();
         roads = new ArrayList<>();
     }
 
-    public void render() {
+    public void render(float delta) {
         roads.forEach(Road::render);
-        buildings.forEach(Building::render);
+        buildings.forEach(e -> e.render(delta));
     }
 
     public void addBuilding(Building b) {
@@ -50,30 +51,27 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
 
     public void selectForRoad(float x, float y) {
         if (roadOne == null) {
-            int i = -1;
-            while (++i < buildings.size() && roadOne == null) {
-                Plateform p = (Plateform) buildings.get(i);
-                if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
-                    roadOne = p;
-                    roadOne.setSelected(true);
-                }
-            }
+            buildings.stream().filter(e -> e instanceof SelectableBuilding)
+                    .filter(e -> Vector2.dst(e.getPos().x, e.getPos().y, x, y) < e.getRadius()).findFirst()
+                    .ifPresent(e -> {
+                        roadOne = (SelectableBuilding) e;
+                        roadOne.setSelected(true);
+                    });
         } else {
-            int i = -1;
-            while (++i < buildings.size() && roadTwo == null) {
-                Plateform p = (Plateform) buildings.get(i);
-                if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
-                    roadTwo = p;
-                }
-            }
+
+            buildings.stream().filter(e -> e instanceof Selectable)
+                    .filter(e -> Vector2.dst(e.getPos().x, e.getPos().y, x, y) < e.getRadius()).findFirst()
+                    .ifPresent(e -> {
+                        roadTwo = (SelectableBuilding) e;
+                    });
         }
 
         if (roadOne != null && roadTwo != null) {
-            if (roadOne != roadTwo && !roads.contains(new Road(roadOne, roadTwo))) {
+            if (roadOne != roadTwo && !roads.contains(new Road(roadOne, roadTwo)) && canConstructRoad()) {
                 roads.add(new Road(roadOne, roadTwo));
                 roads.add(new Road(roadTwo, roadOne));
-            } else if(roads.contains(new Road(roadOne, roadTwo))){
-                roads.removeIf((e)-> e.equals(new Road(roadOne, roadTwo)));
+            } else if (roads.contains(new Road(roadOne, roadTwo))) {
+                roads.removeIf((e) -> e.equals(new Road(roadOne, roadTwo)));
             }
             roadOne.setSelected(false);
             roadOne = null;
@@ -81,14 +79,12 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
         }
     }
 
-    public Plateform selectForPath(float x, float y) {
-        for(Building b : buildings){
-            Plateform p = (Plateform) b;
-            if (Vector2.dst(p.getPos().x, p.getPos().y, x, y) < p.getRadius()) {
-                return p;
-            }
-        }
-        return null;
+    public SelectableBuilding selectForPath(float x, float y) {
+        return buildings.stream()
+            .filter(e -> e instanceof SelectableBuilding)
+            .map(e -> (SelectableBuilding)e)
+            .filter(e -> Vector2.dst(e.getPos().x, e.getPos().y, x, y) < e.getRadius())
+            .findFirst().orElse(null);
     }
 
     public int getRoadsNumber() {
@@ -123,4 +119,15 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
     public Building getNode(int index) {
         return buildings.get(index);
     }
+
+    public boolean canConstructRoad(){
+        float m = (roadTwo.getPos().y - roadOne.getPos().y)/(roadTwo.getPos().x - roadOne.getPos().x);
+        float p = roadOne.getPos().y - m * roadOne.getPos().x;
+        
+        return buildings.stream()
+            .filter(e-> Math.abs(m * e.getPos().x - e.getPos().y + p) / Math.sqrt(1 + m * m) > e.getRadius())
+            .findFirst()
+            .isPresent();
+    }
 }
+
