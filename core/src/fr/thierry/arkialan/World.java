@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * World class
@@ -128,6 +129,13 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
             .filter(e-> Math.abs(m * e.getPos().x - e.getPos().y + p) / Math.sqrt(1 + m * m) > e.getRadius())
             .findFirst()
             .isPresent();
+    }
+
+        public void generateRandom(){
+        Stream.generate(() -> new Vector2(MathUtils.random(-100, -100), MathUtils.random(100, 100)))
+            //.limit(200)
+            .map(Plateform::new)
+            .forEach(buildings::add);
     }
 }
 

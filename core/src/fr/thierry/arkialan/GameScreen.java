@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -147,12 +148,16 @@ public class GameScreen implements Screen {
 
     public void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            Gdx.app.log("Key pressed", "A key has been pressed");
             world.addBuilding(new Plateform(new Vector2(getRelativeX(), getRelativeY())));
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
             world.addBuilding(new Mine(new Vector2(getRelativeX(), getRelativeY())));
         }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.R))
+            world.generateRandom();
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (previousTouched) {
