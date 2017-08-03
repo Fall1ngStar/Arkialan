@@ -6,6 +6,7 @@ import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import fr.thierry.arkialan.utils.ArrayListNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
     private SelectableBuilding roadTwo;
 
     public World() {
-        buildings = new ArrayList<>();
-        roads = new ArrayList<>();
+        buildings = new ArrayListNotNull<>();
+        roads = new ArrayListNotNull<>();
     }
 
     public void render(float delta) {
@@ -81,11 +82,8 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
     }
 
     public SelectableBuilding selectForPath(float x, float y) {
-        return buildings.stream()
-            .filter(e -> e instanceof SelectableBuilding)
-            .map(e -> (SelectableBuilding)e)
-            .filter(e -> Vector2.dst(e.getPos().x, e.getPos().y, x, y) < e.getRadius())
-            .findFirst().orElse(null);
+        return buildings.stream().filter(e -> e instanceof SelectableBuilding).map(e -> (SelectableBuilding) e)
+                .filter(e -> Vector2.dst(e.getPos().x, e.getPos().y, x, y) < e.getRadius()).findFirst().orElse(null);
     }
 
     public int getRoadsNumber() {
@@ -121,21 +119,33 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
         return buildings.get(index);
     }
 
-    public boolean canConstructRoad(){
-        float m = (roadTwo.getPos().y - roadOne.getPos().y)/(roadTwo.getPos().x - roadOne.getPos().x);
+    public boolean canConstructRoad() {
+        float m = (roadTwo.getPos().y - roadOne.getPos().y) / (roadTwo.getPos().x - roadOne.getPos().x);
         float p = roadOne.getPos().y - m * roadOne.getPos().x;
-        
+
         return buildings.stream()
-            .filter(e-> Math.abs(m * e.getPos().x - e.getPos().y + p) / Math.sqrt(1 + m * m) > e.getRadius())
-            .findFirst()
-            .isPresent();
+                .filter(e -> Math.abs(m * e.getPos().x - e.getPos().y + p) / Math.sqrt(1 + m * m) > e.getRadius())
+                .findFirst()
+                .isPresent();
     }
 
-        public void generateRandom(){
-        Stream.generate(() -> new Vector2(MathUtils.random(-100, -100), MathUtils.random(100, 100)))
-            //.limit(200)
-            .map(Plateform::new)
-            .forEach(buildings::add);
+    public void generateRandom() {
+        Stream.generate(() -> new Vector2(MathUtils.random(-5000, 5000), MathUtils.random(-5000, 5000))).limit(200)
+                .map(Plateform::new).forEach(buildings::add);
+        buildings.stream()//.parallel()
+                //.filter(e -> Math.random() > 0.2)
+                .forEach(e -> {
+                    buildings.stream()
+                            .filter(f -> Vector2.dst(e.pos.x, e.pos.y, f.pos.x, f.pos.y) < 1000)
+                            //.findFirst()
+                            //.ifPresent(f -> {
+                            .limit(20)
+                            .forEach(f->{
+                        //System.out.println(e);
+                        //System.out.println(f);
+                        roads.add(new Road(e, f));
+                        roads.add(new Road(f, e));
+                    });
+                });
     }
 }
-
