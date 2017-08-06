@@ -148,7 +148,6 @@ public class GameScreen implements Screen {
 
     public void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            Gdx.app.log("Key pressed", "A key has been pressed");
             world.addBuilding(new Plateform(new Vector2(getRelativeX(), getRelativeY())));
         }
 

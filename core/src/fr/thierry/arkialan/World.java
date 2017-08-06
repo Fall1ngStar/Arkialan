@@ -124,9 +124,7 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
         float p = roadOne.getPos().y - m * roadOne.getPos().x;
 
         return buildings.stream()
-                .filter(e -> Math.abs(m * e.getPos().x - e.getPos().y + p) / Math.sqrt(1 + m * m) > e.getRadius())
-                .findFirst()
-                .isPresent();
+                .anyMatch(e -> Math.abs(m * e.getPos().x - e.getPos().y + p) / Math.sqrt(1 + m * m) > e.getRadius());
     }
 
     public void generateRandom() {
@@ -139,13 +137,13 @@ public class World implements Graph<Building>, IndexedGraph<Building> {
                             .filter(f -> Vector2.dst(e.pos.x, e.pos.y, f.pos.x, f.pos.y) < 1000)
                             //.findFirst()
                             //.ifPresent(f -> {
-                            .limit(20)
-                            .forEach(f->{
-                        //System.out.println(e);
-                        //System.out.println(f);
-                        roads.add(new Road(e, f));
-                        roads.add(new Road(f, e));
-                    });
+                            .limit(10)
+                            .forEach(f -> {
+                                //System.out.println(e);
+                                //System.out.println(f);
+                                roads.add(new Road(e, f));
+                                roads.add(new Road(f, e));
+                            });
                 });
     }
 }
