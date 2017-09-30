@@ -1,5 +1,2 @@
 language: java
-sudo: enabled
-script:
-  ./gradlew core:clean
-  ./gradlew core:build
+
