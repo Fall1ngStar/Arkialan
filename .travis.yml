@@ -1,3 +1,4 @@
 language: java
-./gradlew core:clean
-./gradlew core:build
+script:
+  ./gradlew core:clean
+  ./gradlew core:build
