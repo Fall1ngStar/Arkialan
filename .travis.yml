@@ -1,2 +1,6 @@
 language: java
-
+before_install:
+ - chmod +x gradlew
+ script:
+    ./gradlew core:clean
+    ./gradlew core:build
